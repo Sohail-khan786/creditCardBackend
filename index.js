@@ -1,10 +1,12 @@
 
 const express = require('express');
+const cors = require('cors');
 const checkIfCreditCardIsValid = require('./credit-card-utils');
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
+app.use(cors())
 
 app.get("/public/health", (req,res) => {
     res.status(200).send({
