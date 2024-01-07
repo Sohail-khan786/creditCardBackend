@@ -2,11 +2,34 @@
 const express = require('express');
 const cors = require('cors');
 const checkIfCreditCardIsValid = require('./credit-card-utils');
+const cron = require('node-cron');
+const axios = require('axios');
+
 const app = express();
 const PORT = 8080;
 
 app.use(express.json());
 app.use(cors())
+
+const pingBackend = () => {
+    axios.post('https://creditcardbackend.onrender.com/checkCreditCard', { card_number : "3213123123123" }).then((response) => {})
+}
+
+const pingFrontend = () => {
+    axios.get('https://creditcardfrontend.onrender.com/').then((response) => {})
+}
+
+// Schedule the cron job to run every minute
+cron.schedule('*/59 * * * *', () => {
+    try {
+        pingBackend()
+    } catch (error) {}
+
+    try {
+        pingFrontend()
+    } catch (error) {}
+
+});
 
 app.get("/public/health", (req,res) => {
     res.status(200).send({
